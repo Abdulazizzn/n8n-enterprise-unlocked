@@ -1,5 +1,6 @@
 [phases.setup]
-nixPkgs = ["nodejs_22", "pnpm-9_x", "ffmpeg", "openssl", "libnss3", "libatk1.0-0", "libatk-bridge2.0-0", "libcups2", "libgbm1", "libasound2t64", "libpangocairo-1.0-0", "libxss1", "libgtk-3-0", "libxshmfence1", "libglu1", "chromium"]
+nixPkgs = ["nodejs_22", "pnpm-9_x", "ffmpeg", "openssl", "chromium"]
+aptPkgs = ["libnss3", "libatk1.0-0", "libatk-bridge2.0-0", "libcups2", "libgbm1", "libasound2t64", "libpangocairo-1.0-0", "libxss1", "libgtk-3-0", "libxshmfence1", "libglu1"]
 
 [phases.install]
 cmds = [
