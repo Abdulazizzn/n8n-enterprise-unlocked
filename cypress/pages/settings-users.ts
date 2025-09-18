@@ -4,7 +4,6 @@ import { SettingsSidebar } from './sidebar/settings-sidebar';
 import { WorkflowPage } from './workflow';
 import { WorkflowsPage } from './workflows';
 import { expandSidebar } from '../composables/sidebar';
-import { getVisiblePopper } from '../utils';
 
 const workflowPage = new WorkflowPage();
 const workflowsPage = new WorkflowsPage();
@@ -64,8 +63,8 @@ export class SettingsUsersPage extends BasePage {
 			}
 		},
 		opedDeleteDialog: (email: string) => {
-			this.getters.userRoleSelect(email).find('button').should('be.visible').click();
-			getVisiblePopper().find('span').contains('Remove user').click();
+			this.getters.userActionsToggle(email).should('be.visible').click();
+			this.getters.deleteUserAction().click();
 			this.getters.confirmDeleteModal().should('be.visible');
 		},
 	};

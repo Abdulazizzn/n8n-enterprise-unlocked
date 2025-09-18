@@ -113,7 +113,7 @@ test.describe('Projects', () => {
 
 			// Navigate to project settings
 			await n8n.page.goto(`/projects/${projectId}/settings`);
-			await n8n.page.waitForLoadState('domcontentloaded');
+			await n8n.projectSettings.waitForProjectSettingsRestResponse();
 
 			// Verify basic project settings form elements are visible (inner controls)
 			await expect(n8n.projectSettings.getNameInput()).toBeVisible();
@@ -138,7 +138,7 @@ test.describe('Projects', () => {
 
 			// Navigate to project settings
 			await n8n.page.goto(`/projects/${projectId}/settings`);
-			await n8n.page.waitForLoadState('domcontentloaded');
+			await n8n.projectSettings.waitForProjectSettingsRestResponse();
 
 			// Update project name
 			const newName = 'Updated Project Name';
@@ -167,7 +167,7 @@ test.describe('Projects', () => {
 
 			// Navigate to project settings
 			await n8n.page.goto(`/projects/${projectId}/settings`);
-			await n8n.page.waitForLoadState('domcontentloaded');
+			await n8n.projectSettings.waitForProjectSettingsRestResponse();
 
 			const table = n8n.projectSettings.getMembersTable();
 
@@ -193,7 +193,7 @@ test.describe('Projects', () => {
 
 			// Navigate to project settings
 			await n8n.page.goto(`/projects/${projectId}/settings`);
-			await n8n.page.waitForLoadState('domcontentloaded');
+			await n8n.projectSettings.waitForProjectSettingsRestResponse();
 
 			// Current user (owner) should not have a role dropdown
 			const currentUserRow = n8n.page.locator('tbody tr').first();
@@ -209,7 +209,7 @@ test.describe('Projects', () => {
 
 			// Navigate to project settings
 			await n8n.page.goto(`/projects/${projectId}/settings`);
-			await n8n.page.waitForLoadState('domcontentloaded');
+			await n8n.projectSettings.waitForProjectSettingsRestResponse();
 
 			// Verify search input is visible
 			const searchInput = n8n.page.getByTestId('project-members-search');
@@ -233,7 +233,7 @@ test.describe('Projects', () => {
 
 			// Navigate to project settings
 			await n8n.page.goto(`/projects/${projectId}/settings`);
-			await n8n.page.waitForLoadState('domcontentloaded');
+			await n8n.projectSettings.waitForProjectSettingsRestResponse();
 
 			// Clear the project name (required field)
 			await n8n.projectSettings.fillProjectName('');
@@ -255,7 +255,7 @@ test.describe('Projects', () => {
 
 			// Navigate to project settings
 			await n8n.page.goto(`/projects/${projectId}/settings`);
-			await n8n.page.waitForLoadState('domcontentloaded');
+			await n8n.projectSettings.waitForProjectSettingsRestResponse();
 
 			// Initially, save and cancel buttons should be disabled (no changes)
 			await expect(n8n.page.getByTestId('project-settings-save-button')).toBeDisabled();
@@ -285,7 +285,7 @@ test.describe('Projects', () => {
 
 			// Navigate to project settings
 			await n8n.page.goto(`/projects/${projectId}/settings`);
-			await n8n.page.waitForLoadState('domcontentloaded');
+			await n8n.projectSettings.waitForProjectSettingsRestResponse();
 
 			// Scroll to bottom to see delete section
 			await n8n.page
@@ -309,7 +309,7 @@ test.describe('Projects', () => {
 
 			// Navigate to project settings
 			await n8n.page.goto(`/projects/${projectId}/settings`);
-			await n8n.page.waitForLoadState('domcontentloaded');
+			await n8n.projectSettings.waitForProjectSettingsRestResponse();
 
 			// Update project details
 			const projectName = 'Persisted Project Name';
@@ -326,7 +326,7 @@ test.describe('Projects', () => {
 
 			// Reload the page
 			await n8n.page.reload();
-			await n8n.page.waitForLoadState('domcontentloaded');
+			await n8n.projectSettings.waitForProjectSettingsRestResponse();
 
 			// Verify data persisted
 			await n8n.projectSettings.expectProjectNameValue(projectName);
