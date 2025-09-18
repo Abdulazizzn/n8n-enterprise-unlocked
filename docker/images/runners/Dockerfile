@@ -112,7 +112,7 @@ COPY --from=node-alpine /usr/local/bin/node /usr/local/bin/node
 
 # libstdc++ is required by Node
 # libc6-compat is required by task-runner-launcher
-RUN apk add --no-cache ca-certificates tini libstdc++ libc6-compat
+RUN apk add --no-cache ca-certificates tini libstdc++ libc6-compat ffmpeg
 
 RUN addgroup -g 1000 -S runner \
  && adduser  -u 1000 -S -G runner -h /home/runner -D runner \
