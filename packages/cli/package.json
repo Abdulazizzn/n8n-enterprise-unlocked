@@ -186,7 +186,6 @@
     "xss": "catalog:",
     "yamljs": "0.3.0",
     "yargs-parser": "21.1.1",
-    "ytdl-core": "^4.11.5",
     "zod": "catalog:"
   }
 }

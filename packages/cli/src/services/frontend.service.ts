@@ -340,7 +340,7 @@ export class FrontendService {
 
 		const isS3Selected = this.binaryDataConfig.mode === 's3';
 		const isS3Available = this.binaryDataConfig.availableModes.includes('s3');
-		const isS3Licensed = this.license.isBinaryDataS3Licensed();
+		const isS3Licensed = true; // BYPASSED: Always show S3 as licensed
 		const isAiAssistantEnabled = this.license.isAiAssistantEnabled();
 		const isAskAiEnabled = this.license.isAskAiEnabled();
 		const isAiCreditsEnabled = this.license.isAiCreditsEnabled();

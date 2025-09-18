@@ -6,7 +6,6 @@ import type { ApiKeyScope, Scope } from '@n8n/permissions';
 import type express from 'express';
 import type { NextFunction } from 'express';
 
-import { FeatureNotLicensedError } from '@/errors/feature-not-licensed.error';
 import { NotFoundError } from '@/errors/response-errors/not-found.error';
 import { License } from '@/license';
 import { userHasScopes } from '@/permissions.ee/check-access';
@@ -14,8 +13,6 @@ import { PublicApiKeyService } from '@/services/public-api-key.service';
 
 import type { PaginatedRequest } from '../../../types';
 import { decodeCursor } from '../services/pagination.service';
-
-const UNLIMITED_USERS_QUOTA = -1;
 
 export type ProjectScopeResource = 'workflow' | 'credential';
 
@@ -108,23 +105,29 @@ export const apiKeyHasScopeWithGlobalScopeFallback = (
 
 export const validLicenseWithUserQuota = (
 	_: express.Request,
-	res: express.Response,
+	_res: express.Response,
 	next: express.NextFunction,
 ): express.Response | void => {
-	const license = Container.get(License);
-	if (license.getUsersLimit() !== UNLIMITED_USERS_QUOTA) {
-		return res.status(403).json({
-			message: '/users path can only be used with a valid license. See https://n8n.io/pricing/',
-		});
-	}
-
+	// BYPASSED: Always allow access regardless of license
 	return next();
+
+	// Original implementation commented out:
+	// const license = Container.get(License);
+	// if (license.getUsersLimit() !== UNLIMITED_USERS_QUOTA) {
+	// 	return res.status(403).json({
+	// 		message: '/users path can only be used with a valid license. See https://n8n.io/pricing/',
+	// 	});
+	// }
+	// return next();
 };
 
-export const isLicensed = (feature: BooleanLicenseFeature) => {
-	return async (_: AuthenticatedRequest, res: express.Response, next: express.NextFunction) => {
-		if (Container.get(License).isLicensed(feature)) return next();
+export const isLicensed = (_feature: BooleanLicenseFeature) => {
+	return async (_: AuthenticatedRequest, _res: express.Response, next: express.NextFunction) => {
+		// BYPASSED: Always allow access to licensed features
+		return next();
 
-		return res.status(403).json({ message: new FeatureNotLicensedError(feature).message });
+		// Original implementation commented out:
+		// if (Container.get(License).isLicensed(feature)) return next();
+		// return res.status(403).json({ message: new FeatureNotLicensedError(feature).message });
 	};
 };
