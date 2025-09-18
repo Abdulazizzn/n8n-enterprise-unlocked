@@ -6,7 +6,7 @@ ARG TARGETPLATFORM
 # ==============================================================================
 # STAGE 1: System Dependencies & Base Setup
 # ==============================================================================
-FROM n8nio/base:${NODE_VERSION} AS system-deps
+FROM n8nio/base:22-ffmpeg AS system-deps
 
 # ==============================================================================
 # STAGE 2: Application Artifact Processor

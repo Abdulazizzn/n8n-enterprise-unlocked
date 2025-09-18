@@ -29,7 +29,11 @@
 				"N8N_VERSION",
 				"ENVIRONMENT",
 				"DEPLOYMENT_NAME"
-			]
+			],
+			"env-overrides": {
+				"NODE_FUNCTION_ALLOW_BUILTIN": "crypto",
+				"NODE_FUNCTION_ALLOW_EXTERNAL": "ytdl-core,youtube-dl-exec,yt-search,ytsr,moment"
+			}
 		}
 	]
 }
