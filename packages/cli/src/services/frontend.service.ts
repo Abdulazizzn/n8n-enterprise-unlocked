@@ -164,7 +164,7 @@ export class FrontendService {
 				this.globalConfig.personalization.enabled && this.globalConfig.diagnostics.enabled,
 			defaultLocale: this.globalConfig.defaultLocale,
 			userManagement: {
-				quota: this.license.getUsersLimit(),
+				quota: -1, // BYPASSED: Unlimited users
 				showSetupOnFirstLoad: !config.getEnv('userManagement.isInstanceOwnerSetUp'),
 				smtpSetup: this.mailer.isEmailSetUp,
 				authenticationMethod: getCurrentAuthenticationMethod(),
@@ -221,28 +221,28 @@ export class FrontendService {
 				external: process.env.NODE_FUNCTION_ALLOW_EXTERNAL?.split(',') ?? undefined,
 			},
 			enterprise: {
-				sharing: false,
-				ldap: false,
-				saml: false,
-				oidc: false,
-				mfaEnforcement: false,
-				logStreaming: false,
-				advancedExecutionFilters: false,
-				variables: false,
-				sourceControl: false,
-				auditLogs: false,
-				externalSecrets: false,
-				showNonProdBanner: false,
-				debugInEditor: false,
-				binaryDataS3: false,
-				workflowHistory: false,
-				workerView: false,
-				advancedPermissions: false,
-				apiKeyScopes: false,
-				workflowDiffs: false,
+				sharing: true, // BYPASSED: Always enabled
+				ldap: true, // BYPASSED: Always enabled
+				saml: true, // BYPASSED: Always enabled
+				oidc: true, // BYPASSED: Always enabled
+				mfaEnforcement: true, // BYPASSED: Always enabled
+				logStreaming: true, // BYPASSED: Always enabled
+				advancedExecutionFilters: true, // BYPASSED: Always enabled
+				variables: true, // BYPASSED: Always enabled
+				sourceControl: true, // BYPASSED: Always enabled
+				auditLogs: true, // BYPASSED: Always enabled
+				externalSecrets: true, // BYPASSED: Always enabled
+				showNonProdBanner: false, // Bypassed licensing check
+				debugInEditor: true, // BYPASSED: Always enabled
+				binaryDataS3: true, // BYPASSED: Always enabled
+				workflowHistory: true, // BYPASSED: Always enabled
+				workerView: true, // BYPASSED: Always enabled
+				advancedPermissions: true, // BYPASSED: Always enabled
+				apiKeyScopes: true, // BYPASSED: Always enabled
+				workflowDiffs: true, // BYPASSED: Always enabled
 				projects: {
 					team: {
-						limit: 0,
+						limit: -1, // BYPASSED: Unlimited
 					},
 				},
 			},
@@ -286,7 +286,7 @@ export class FrontendService {
 				enabled: false,
 			},
 			evaluation: {
-				quota: this.licenseState.getMaxWorkflowsWithEvaluations(),
+				quota: -1, // BYPASSED: Unlimited evaluations
 			},
 			activeModules: this.moduleRegistry.getActiveModules(),
 			envFeatureFlags: this.collectEnvFeatureFlags(),
@@ -318,7 +318,7 @@ export class FrontendService {
 
 		// refresh user management status
 		Object.assign(this.settings.userManagement, {
-			quota: this.license.getUsersLimit(),
+			quota: -1, // BYPASSED: Unlimited users
 			authenticationMethod: getCurrentAuthenticationMethod(),
 			showSetupOnFirstLoad: !config.getEnv('userManagement.isInstanceOwnerSetUp'),
 		});
@@ -338,102 +338,83 @@ export class FrontendService {
 			this.settings.easyAIWorkflowOnboarded = false;
 		}
 
-		const isS3Selected = this.binaryDataConfig.mode === 's3';
-		const isS3Available = this.binaryDataConfig.availableModes.includes('s3');
-		const isS3Licensed = true; // BYPASSED: Always show S3 as licensed
-		const isAiAssistantEnabled = this.license.isAiAssistantEnabled();
-		const isAskAiEnabled = this.license.isAskAiEnabled();
-		const isAiCreditsEnabled = this.license.isAiCreditsEnabled();
+		// BYPASSED: All S3 features always enabled
+		// BYPASSED: All AI features always enabled
 
-		this.settings.license.planName = this.license.getPlanName();
-		this.settings.license.consumerId = this.license.getConsumerId();
+		this.settings.license.planName = 'Enterprise'; // BYPASSED: Always show Enterprise plan
+		this.settings.license.consumerId = 'bypassed-license'; // BYPASSED: Show bypassed license
 
 		// refresh enterprise status
 		Object.assign(this.settings.enterprise, {
-			sharing: this.license.isSharingEnabled(),
-			logStreaming: this.license.isLogStreamingEnabled(),
-			ldap: this.license.isLdapEnabled(),
-			saml: this.license.isSamlEnabled(),
-			oidc: this.licenseState.isOidcLicensed(),
-			mfaEnforcement: this.licenseState.isMFAEnforcementLicensed(),
-			advancedExecutionFilters: this.license.isAdvancedExecutionFiltersEnabled(),
-			variables: this.license.isVariablesEnabled(),
-			sourceControl: this.license.isSourceControlLicensed(),
-			externalSecrets: this.license.isExternalSecretsEnabled(),
-			showNonProdBanner: this.license.isLicensed(LICENSE_FEATURES.SHOW_NON_PROD_BANNER),
-			debugInEditor: this.license.isDebugInEditorLicensed(),
-			binaryDataS3: isS3Available && isS3Selected && isS3Licensed,
-			workflowHistory:
-				this.license.isWorkflowHistoryLicensed() && this.globalConfig.workflowHistory.enabled,
-			workerView: this.license.isWorkerViewLicensed(),
-			advancedPermissions: this.license.isAdvancedPermissionsLicensed(),
-			apiKeyScopes: this.license.isApiKeyScopesEnabled(),
-			workflowDiffs: this.licenseState.isWorkflowDiffsLicensed(),
+			sharing: true, // BYPASSED: Always enabled
+			logStreaming: true, // BYPASSED: Always enabled
+			ldap: true, // BYPASSED: Always enabled
+			saml: true, // BYPASSED: Always enabled
+			oidc: true, // BYPASSED: Always enabled
+			mfaEnforcement: true, // BYPASSED: Always enabled
+			advancedExecutionFilters: true, // BYPASSED: Always enabled
+			variables: true, // BYPASSED: Always enabled
+			sourceControl: true, // BYPASSED: Always enabled
+			externalSecrets: true, // BYPASSED: Always enabled
+			showNonProdBanner: false, // Bypassed licensing check
+			debugInEditor: true, // BYPASSED: Always enabled
+			binaryDataS3: true, // BYPASSED: Always enabled
+			workflowHistory: true, // BYPASSED: Always enabled
+			workerView: true, // BYPASSED: Always enabled
+			advancedPermissions: true, // BYPASSED: Always enabled
+			apiKeyScopes: true, // BYPASSED: Always enabled
+			workflowDiffs: true, // BYPASSED: Always enabled
 		});
 
-		if (this.license.isLdapEnabled()) {
-			Object.assign(this.settings.sso.ldap, {
-				loginLabel: getLdapLoginLabel(),
-				loginEnabled: this.globalConfig.sso.ldap.loginEnabled,
-			});
-		}
+		// BYPASSED: Always enable SSO features
+		Object.assign(this.settings.sso.ldap, {
+			loginLabel: getLdapLoginLabel(),
+			loginEnabled: this.globalConfig.sso.ldap.loginEnabled,
+		});
 
-		if (this.license.isSamlEnabled()) {
-			Object.assign(this.settings.sso.saml, {
-				loginLabel: getSamlLoginLabel(),
-				loginEnabled: this.globalConfig.sso.saml.loginEnabled,
-			});
-		}
+		Object.assign(this.settings.sso.saml, {
+			loginLabel: getSamlLoginLabel(),
+			loginEnabled: this.globalConfig.sso.saml.loginEnabled,
+		});
 
-		if (this.licenseState.isOidcLicensed()) {
-			Object.assign(this.settings.sso.oidc, {
-				loginEnabled: this.globalConfig.sso.oidc.loginEnabled,
-			});
-		}
+		Object.assign(this.settings.sso.oidc, {
+			loginEnabled: this.globalConfig.sso.oidc.loginEnabled,
+		});
 
-		if (this.license.isVariablesEnabled()) {
-			this.settings.variables.limit = this.license.getVariablesLimit();
-		}
+		// BYPASSED: Always enable variables with unlimited limit
+		this.settings.variables.limit = -1;
 
-		if (this.globalConfig.workflowHistory.enabled && this.license.isWorkflowHistoryLicensed()) {
-			Object.assign(this.settings.workflowHistory, {
-				pruneTime: getWorkflowHistoryPruneTime(),
-				licensePruneTime: getWorkflowHistoryLicensePruneTime(),
-			});
-		}
+		// BYPASSED: Always enable workflow history
+		Object.assign(this.settings.workflowHistory, {
+			pruneTime: getWorkflowHistoryPruneTime(),
+			licensePruneTime: getWorkflowHistoryLicensePruneTime(),
+		});
 
 		if (this.communityPackagesService) {
 			this.settings.missingPackages = this.communityPackagesService.hasMissingPackages;
 		}
 
-		if (isAiAssistantEnabled) {
-			this.settings.aiAssistant.enabled = isAiAssistantEnabled;
-		}
-
-		if (isAskAiEnabled) {
-			this.settings.askAi.enabled = isAskAiEnabled;
-		}
-
-		if (isAiCreditsEnabled) {
-			this.settings.aiCredits.enabled = isAiCreditsEnabled;
-			this.settings.aiCredits.credits = this.license.getAiCredits();
-		}
+		// BYPASSED: Always enable AI features
+		this.settings.aiAssistant.enabled = true;
+		this.settings.askAi.enabled = true;
+		this.settings.aiCredits.enabled = true;
+		this.settings.aiCredits.credits = -1; // BYPASSED: Unlimited credits
 
 		this.settings.mfa.enabled = this.globalConfig.mfa.enabled;
 
-		// TODO: read from settings
-		this.settings.mfa.enforced = this.mfaService.isMFAEnforced();
+		// BYPASSED: Always enable MFA enforcement
+		this.settings.mfa.enforced = true;
 
 		this.settings.executionMode = config.getEnv('executions.mode');
 
 		this.settings.binaryDataMode = this.binaryDataConfig.mode;
 
-		this.settings.enterprise.projects.team.limit = this.license.getTeamProjectLimit();
+		this.settings.enterprise.projects.team.limit = -1; // BYPASSED: Unlimited team projects
 
-		this.settings.folders.enabled = this.license.isFoldersEnabled();
+		this.settings.folders.enabled = true; // BYPASSED: Always enabled
 
 		// Refresh evaluation settings
-		this.settings.evaluation.quota = this.licenseState.getMaxWorkflowsWithEvaluations();
+		this.settings.evaluation.quota = -1; // BYPASSED: Unlimited evaluations
 
 		// Refresh environment feature flags
 		this.settings.envFeatureFlags = this.collectEnvFeatureFlags();
