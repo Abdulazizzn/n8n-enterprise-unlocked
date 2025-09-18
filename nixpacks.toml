@@ -1,0 +1,19 @@
+[phases.setup]
+nixPkgs = ["nodejs_22", "pnpm-9_x", "ffmpeg", "openssl", "libnss3", "libatk1.0-0", "libatk-bridge2.0-0", "libcups2", "libgbm1", "libasound2t64", "libpangocairo-1.0-0", "libxss1", "libgtk-3-0", "libxshmfence1", "libglu1", "chromium"]
+
+[phases.install]
+cmds = [
+    "npm install -g corepack@0.24.1 && corepack enable",
+    "pnpm i --frozen-lockfile"
+]
+
+[phases.build]
+cmds = ["npx turbo run build"]
+
+[start]
+cmd = "pnpm --filter=n8n start"
+
+[variables]
+N8N_HOST = "0.0.0.0"
+N8N_PORT = "5678"
+NODE_ENV = "production"
