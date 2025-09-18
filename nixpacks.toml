@@ -5,7 +5,8 @@ aptPkgs = ["libnss3", "libatk1.0-0", "libatk-bridge2.0-0", "libcups2", "libgbm1"
 [phases.install]
 cmds = [
     "npm install -g corepack@0.24.1 && corepack enable",
-    "pnpm i --frozen-lockfile"
+    "pnpm i --frozen-lockfile",
+    "pnpm add ytdl-core youtube-dl-exec yt-search ytsr moment"
 ]
 
 [phases.build]
@@ -18,3 +19,6 @@ cmd = "pnpm --filter=n8n start"
 N8N_HOST = "0.0.0.0"
 N8N_PORT = "5678"
 NODE_ENV = "production"
+N8N_RUNNERS_ENABLED = "true"
+NODE_FUNCTION_ALLOW_BUILTIN = "crypto"
+NODE_FUNCTION_ALLOW_EXTERNAL = "ytdl-core,youtube-dl-exec,yt-search,ytsr,moment"
