@@ -3,7 +3,6 @@ import { Logger } from '@n8n/backend-common';
 import { GlobalConfig } from '@n8n/config';
 import {
 	LICENSE_FEATURES,
-	LICENSE_QUOTAS,
 	Time,
 	UNLIMITED_LICENSE_QUOTA,
 	type BooleanLicenseFeature,
@@ -218,9 +217,10 @@ export class License implements LicenseProvider {
 	}
 
 	isLicensed(_feature: BooleanLicenseFeature) {
-		// Bypass license check - always return true
+		// BYPASSED: Always return true to enable all enterprise features
 		return true;
-		// Original code: return this.manager?.hasFeatureEnabled(feature) ?? false;
+		// Original implementation commented out:
+		// return this.manager?.hasFeatureEnabled(feature) ?? false;
 	}
 
 	/** @deprecated Use `LicenseState.isSharingLicensed` instead. */
@@ -348,7 +348,24 @@ export class License implements LicenseProvider {
 	}
 
 	getValue<T extends keyof FeatureReturnType>(feature: T): FeatureReturnType[T] {
-		return this.manager?.getFeatureValue(feature) as FeatureReturnType[T];
+		// BYPASSED: Return unlimited quotas for enterprise features
+		if (feature === 'planName') {
+			return 'Enterprise' as FeatureReturnType[T];
+		}
+
+		// For quota features, return unlimited (-1)
+		if (feature.toString().includes('quota:')) {
+			return UNLIMITED_LICENSE_QUOTA as FeatureReturnType[T];
+		}
+
+		// For all other features, try to get the real value first, then fallback to unlimited
+		const realValue = this.manager?.getFeatureValue(feature) as FeatureReturnType[T];
+		if (realValue !== undefined && realValue !== null) {
+			return realValue;
+		}
+
+		// Default to unlimited for numeric values, true for boolean values
+		return UNLIMITED_LICENSE_QUOTA as FeatureReturnType[T];
 	}
 
 	getManagementJwt(): string {
@@ -386,46 +403,43 @@ export class License implements LicenseProvider {
 
 	/** @deprecated Use `LicenseState` instead. */
 	getUsersLimit() {
-		// Bypass license quota - always return unlimited
+		// BYPASSED: Always return unlimited users
 		return UNLIMITED_LICENSE_QUOTA;
-		// Original code: return this.getValue(LICENSE_QUOTAS.USERS_LIMIT) ?? UNLIMITED_LICENSE_QUOTA;
 	}
 
 	/** @deprecated Use `LicenseState` instead. */
 	getTriggerLimit() {
-		// Bypass license quota - always return unlimited
+		// BYPASSED: Always return unlimited triggers
 		return UNLIMITED_LICENSE_QUOTA;
-		// Original code: return this.getValue(LICENSE_QUOTAS.TRIGGER_LIMIT) ?? UNLIMITED_LICENSE_QUOTA;
 	}
 
 	/** @deprecated Use `LicenseState` instead. */
 	getVariablesLimit() {
-		// Bypass license quota - always return unlimited
+		// BYPASSED: Always return unlimited variables
 		return UNLIMITED_LICENSE_QUOTA;
-		// Original code: return this.getValue(LICENSE_QUOTAS.VARIABLES_LIMIT) ?? UNLIMITED_LICENSE_QUOTA;
 	}
 
 	/** @deprecated Use `LicenseState` instead. */
 	getAiCredits() {
-		return this.getValue(LICENSE_QUOTAS.AI_CREDITS) ?? 0;
+		// BYPASSED: Always return unlimited AI credits
+		return UNLIMITED_LICENSE_QUOTA;
 	}
 
 	/** @deprecated Use `LicenseState` instead. */
 	getWorkflowHistoryPruneLimit() {
-		// Bypass license quota - always return unlimited
+		// BYPASSED: Always return unlimited workflow history
 		return UNLIMITED_LICENSE_QUOTA;
-		// Original code: return this.getValue(LICENSE_QUOTAS.WORKFLOW_HISTORY_PRUNE_LIMIT) ?? UNLIMITED_LICENSE_QUOTA;
 	}
 
 	/** @deprecated Use `LicenseState` instead. */
 	getTeamProjectLimit() {
-		// Bypass license quota - always return unlimited
+		// BYPASSED: Always return unlimited team projects
 		return UNLIMITED_LICENSE_QUOTA;
-		// Original code: return this.getValue(LICENSE_QUOTAS.TEAM_PROJECT_LIMIT) ?? 0;
 	}
 
 	getPlanName(): string {
-		return this.getValue('planName') ?? 'Community';
+		// BYPASSED: Always return Enterprise plan name
+		return 'Enterprise';
 	}
 
 	getInfo(): string {
@@ -438,9 +452,7 @@ export class License implements LicenseProvider {
 
 	/** @deprecated Use `LicenseState` instead. */
 	isWithinUsersLimit() {
-		// Bypass license check - always return true (within unlimited quota)
-		return true;
-		// Original code: return this.getUsersLimit() === UNLIMITED_LICENSE_QUOTA;
+		return this.getUsersLimit() === UNLIMITED_LICENSE_QUOTA;
 	}
 
 	@OnLeaderTakeover()

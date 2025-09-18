@@ -27,16 +27,38 @@ export class LicenseState {
 	//     core queries
 	// --------------------
 
-	isLicensed(feature: BooleanLicenseFeature) {
-		this.assertProvider();
-
-		return this.licenseProvider.isLicensed(feature);
+	isLicensed(_feature: BooleanLicenseFeature) {
+		// BYPASSED: Always return true to enable all enterprise features
+		return true;
+		// Original implementation commented out:
+		// this.assertProvider();
+		// return this.licenseProvider.isLicensed(feature);
 	}
 
 	getValue<T extends keyof FeatureReturnType>(feature: T): FeatureReturnType[T] {
-		this.assertProvider();
+		// BYPASSED: Return unlimited quotas for enterprise features
+		if (feature === 'planName') {
+			return 'Enterprise' as FeatureReturnType[T];
+		}
 
-		return this.licenseProvider.getValue(feature);
+		// For quota features, return unlimited (-1)
+		if (feature.toString().includes('quota:')) {
+			return UNLIMITED_LICENSE_QUOTA as FeatureReturnType[T];
+		}
+
+		// Try to get the real value first if provider exists
+		try {
+			this.assertProvider();
+			const realValue = this.licenseProvider.getValue(feature);
+			if (realValue !== undefined && realValue !== null) {
+				return realValue;
+			}
+		} catch {
+			// Ignore provider errors, fallback to unlimited
+		}
+
+		// Default to unlimited for numeric values
+		return UNLIMITED_LICENSE_QUOTA as FeatureReturnType[T];
 	}
 
 	// --------------------
@@ -172,42 +194,52 @@ export class LicenseState {
 	// --------------------
 
 	getMaxUsers() {
-		return this.getValue('quota:users') ?? UNLIMITED_LICENSE_QUOTA;
+		// BYPASSED: Always return unlimited users
+		return UNLIMITED_LICENSE_QUOTA;
 	}
 
 	getMaxActiveWorkflows() {
-		return this.getValue('quota:activeWorkflows') ?? UNLIMITED_LICENSE_QUOTA;
+		// BYPASSED: Always return unlimited active workflows
+		return UNLIMITED_LICENSE_QUOTA;
 	}
 
 	getMaxVariables() {
-		return this.getValue('quota:maxVariables') ?? UNLIMITED_LICENSE_QUOTA;
+		// BYPASSED: Always return unlimited variables
+		return UNLIMITED_LICENSE_QUOTA;
 	}
 
 	getMaxAiCredits() {
-		return this.getValue('quota:aiCredits') ?? 0;
+		// BYPASSED: Always return unlimited AI credits
+		return UNLIMITED_LICENSE_QUOTA;
 	}
 
 	getWorkflowHistoryPruneQuota() {
-		return this.getValue('quota:workflowHistoryPrune') ?? UNLIMITED_LICENSE_QUOTA;
+		// BYPASSED: Always return unlimited workflow history
+		return UNLIMITED_LICENSE_QUOTA;
 	}
 
 	getInsightsMaxHistory() {
-		return this.getValue('quota:insights:maxHistoryDays') ?? 7;
+		// BYPASSED: Always return unlimited insights history
+		return UNLIMITED_LICENSE_QUOTA;
 	}
 
 	getInsightsRetentionMaxAge() {
-		return this.getValue('quota:insights:retention:maxAgeDays') ?? 180;
+		// BYPASSED: Always return unlimited retention
+		return UNLIMITED_LICENSE_QUOTA;
 	}
 
 	getInsightsRetentionPruneInterval() {
-		return this.getValue('quota:insights:retention:pruneIntervalDays') ?? 24;
+		// BYPASSED: Always return unlimited prune interval
+		return UNLIMITED_LICENSE_QUOTA;
 	}
 
 	getMaxTeamProjects() {
-		return this.getValue('quota:maxTeamProjects') ?? 0;
+		// BYPASSED: Always return unlimited team projects
+		return UNLIMITED_LICENSE_QUOTA;
 	}
 
 	getMaxWorkflowsWithEvaluations() {
-		return this.getValue('quota:evaluations:maxWorkflows') ?? 0;
+		// BYPASSED: Always return unlimited workflows with evaluations
+		return UNLIMITED_LICENSE_QUOTA;
 	}
 }
