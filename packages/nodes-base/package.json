@@ -950,6 +950,10 @@
     "uuid": "catalog:",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz",
     "xml2js": "catalog:",
-    "xmlhttprequest-ssl": "3.1.0"
+    "xmlhttprequest-ssl": "3.1.0",
+    "ytdl-core": "^4.11.5",
+    "youtube-dl-exec": "^3.0.2",
+    "yt-search": "^2.10.4",
+    "ytsr": "^3.8.4"
   }
 }
